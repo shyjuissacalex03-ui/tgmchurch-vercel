@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Contact form and prayer request submissions.
+    // Anyone can create one valid message; nobody can read them from the
+    // website. Read them in the Firebase console (Firestore > messages).
+    match /messages/{messageId} {
+      allow create: if
+        request.resource.data.keys().hasOnly(
+          ['type', 'name', 'email', 'phone', 'subject', 'message', 'createdAt']) &&
+        request.resource.data.type in ['general', 'prayer'] &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() <= 120 &&
+        request.resource.data.email is string &&
+        request.resource.data.email.size() <= 200 &&
+        request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$') &&
+        request.resource.data.phone is string &&
+        request.resource.data.phone.size() <= 40 &&
+        request.resource.data.subject is string &&
+        request.resource.data.subject.size() <= 200 &&
+        request.resource.data.message is string &&
+        request.resource.data.message.size() > 0 &&
+        request.resource.data.message.size() <= 5000 &&
+        request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

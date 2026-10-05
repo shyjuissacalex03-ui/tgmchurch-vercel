@@ -1,0 +1,21 @@
+{
+  "name": "tgmchurch",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "fetch-images": "node scripts/fetch-images.mjs",
+    "deploy:rules": "npx firebase-tools deploy --only firestore:rules"
+  },
+  "dependencies": {
+    "firebase": "^12.0.0",
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}
